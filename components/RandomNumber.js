@@ -3,8 +3,10 @@ import React from 'react';
 
 export default RandomNumber = ({ id, number, isSelected, onSelected }) => {
     const handlePress = () => {
-        console.log(number);
-        onSelected(id);
+        // console.log(number);
+        if (!isSelected) {
+            onSelected(id);
+        }
     }
 
     return (
