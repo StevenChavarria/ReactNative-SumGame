@@ -6,7 +6,7 @@ import Game from './components/Game'
 export default function App() {
   return (
     <View style={styles.container}>
-      <Game randomNumbersCount={6}/>
+      <Game randomNumbersCount={6} initialSeconds={10}/>
       <StatusBar style="auto" />
     </View>
   );
@@ -16,9 +16,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 30,
+    paddingTop: 50,
     paddingHorizontal: 50,
   },
 });
