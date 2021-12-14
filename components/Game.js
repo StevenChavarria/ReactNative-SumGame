@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, DevSettings, onPress, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import RandomNumber from './RandomNumber';
 import shuffle from 'lodash.shuffle';
@@ -13,9 +13,7 @@ export default Game = ({ randomNumbersCount, initialSeconds }) => {
   const [target, setTarget] = useState(1);
   const [remainingSeconds, setRemainingSeconds] = useState(initialSeconds);
   const [gameStatus, setGameStatus] = useState('PLAYING');
-
-  // const randomNumbers = Array.from({ length: randomNumbersCount }).map(() => 1 + Math.floor(10 * Math.random()));
-  // const target = randomNumbers.slice(0, randomNumbersCount - 2).reduce((acc, cur) => acc + cur, 0);
+  const [refresh, setRefresh] = useState([]);
 
   useEffect(() => {
     const firstRandomNumbers = Array.from({ length: randomNumbersCount }).map(() => 1 + Math.floor(10 * Math.random()));
@@ -26,15 +24,16 @@ export default Game = ({ randomNumbersCount, initialSeconds }) => {
 
     intervalId = setInterval(() => setRemainingSeconds(seconds => seconds - 1), 1000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [refresh]);
 
-  useEffect(() => {
-    setGameStatus(() => getGameStatus());
-    if (remainingSeconds === 0 || gameStatus !== 'PLAYING') {
-      clearInterval(intervalId);
-    }
-  }, [remainingSeconds, selectedNumbers]);
-
+    useEffect(() => {
+      setGameStatus(() => getGameStatus());
+      if (remainingSeconds === 0 || gameStatus !== 'PLAYING') {
+        clearInterval(intervalId);
+      }
+    }, [remainingSeconds, selectedNumbers]);
+  
+  
   const isNumberSelected = numberIndex => selectedNumbers.some(number => number === numberIndex);
   const selectNumber = number => setSelectedNumbers([...selectedNumbers, number]);
 
@@ -51,7 +50,15 @@ export default Game = ({ randomNumbersCount, initialSeconds }) => {
     }
   }
 
-  // const status = gameStatus();
+  const clearState = () => {
+    setSelectedNumbers([]);
+    setRandomNumbers([]);
+    setTarget(100);
+    setRemainingSeconds(initialSeconds);
+    setGameStatus('PLAYING');
+    setRefresh([1]);
+    show = false;
+}
 
   return (
     <View>
@@ -64,7 +71,7 @@ export default Game = ({ randomNumbersCount, initialSeconds }) => {
         ))}
       </View>
      {show ? 
-      <TouchableOpacity style={styles.button} onPress={() => DevSettings.reload()}>
+      <TouchableOpacity style={styles.button} onPress={clearState}>
         <Text style={styles.text}>Play again</Text>
       </TouchableOpacity>
       : null}
